@@ -4,6 +4,8 @@ import Hero from "@/components/hero";
 import Pricing from "@/components/pricing";
 import { ChevronsDownUp, MessageCircleMore } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import ChatModal from "@/components/chat-modal";
 
 const HomePage = () => {
   const [isInView, setIsInView] = useState(false);
@@ -34,14 +36,21 @@ const HomePage = () => {
       <Hero />
       <Features />
       <Pricing />
-      {isInView && (
-        <div
-          onClick={toggleChatModal}
-          className="w-10 h-10 rounded-[50%] bg-black text-white p-1 fixed bottom-4 right-4 flex justify-center items-center"
-        >
-          {isChatModalOpen ? <ChevronsDownUp /> : <MessageCircleMore />}
-        </div>
-      )}
+      <AnimatePresence>
+        {isInView && (
+          <motion.div
+            initial={{ scale: 0, y: 100 }}
+            animate={{ scale: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            exit={{ scale: 0, y: 100 }}
+            onClick={toggleChatModal}
+            className="w-10 h-10 rounded-[50%] bg-black text-white p-1 fixed bottom-4 right-4 flex justify-center items-center"
+          >
+            {isChatModalOpen ? <ChevronsDownUp /> : <MessageCircleMore />}
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {isInView && isChatModalOpen && <ChatModal />}
     </div>
   );
 };
