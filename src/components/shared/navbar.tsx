@@ -11,8 +11,8 @@ const Navbar = () => {
         Purchasing Power Parity
       </Link>
       <div className="flex items-center gap-2">
-        <Link href="/">Features</Link>
-        <Link href="/">Pricing</Link>
+        <Link href="#features">Features</Link>
+        <Link href="#pricing">Pricing</Link>
         <Link href="/">About</Link>
         <Link href="/">Dashboard</Link>
       </div>

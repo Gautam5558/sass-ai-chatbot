@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Card,
   CardContent,
@@ -14,6 +14,7 @@ import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import { ScrollArea } from "./ui/scroll-area";
 import { useChat } from "@ai-sdk/react";
+import ReactMarkdown from "react-markdown";
 
 interface ChatModalProps {
   toggleChatModal: () => void;
@@ -22,8 +23,14 @@ interface ChatModalProps {
 const ChatModal = ({ toggleChatModal }: ChatModalProps) => {
   const { input, isLoading, messages, handleSubmit, handleInputChange } =
     useChat();
-
+  const scrollRef = useRef<null | HTMLDivElement>(null);
   console.log(messages);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   return (
     <motion.div
@@ -31,8 +38,9 @@ const ChatModal = ({ toggleChatModal }: ChatModalProps) => {
       animate={{ scale: 1 }}
       exit={{ scale: 0.8 }}
       transition={{ duration: 0 }}
+      className="fixed right-8 bottom-16 z-[100] w-[95%] md:w-[500px]"
     >
-      <Card className="fixed right-8 bottom-16 w-[300px] h-[400px]">
+      <Card className="border-2">
         <div
           onClick={toggleChatModal}
           className="bg-gray-200 flex items-center justify-center text-black  w-6 h-6 absolute top-2 right-2 rounded-[50%]"
@@ -44,13 +52,32 @@ const ChatModal = ({ toggleChatModal }: ChatModalProps) => {
           <CardDescription>How can I help you!</CardDescription>
         </CardHeader>
         <CardContent>
-          <ScrollArea>
+          <ScrollArea className="h-[300px] pr-3 ">
             {messages.length === 0 && (
               <div>There are no messages to show yet</div>
             )}
             {messages.map((message) => {
-              return <div key={message.id}>{message.content}</div>;
+              return (
+                <div
+                  key={message.id}
+                  className={`mb-4 ${
+                    message.role === "user" ? "text-right" : "text-left"
+                  }`}
+                >
+                  <div
+                    className={`rounded-lg inline-block p-2 ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted"
+                    }`}
+                    key={message.id}
+                  >
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
+                </div>
+              );
             })}
+            <div ref={scrollRef} />
             {isLoading && (
               <div className="flex justify-center items-center">
                 <Loader2 className="animate-spin size-4" />
@@ -59,7 +86,10 @@ const ChatModal = ({ toggleChatModal }: ChatModalProps) => {
           </ScrollArea>
         </CardContent>
         <CardFooter className="">
-          <form onSubmit={handleSubmit} className="flex items-center gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="flex items-center w-[100%] gap-2"
+          >
             <Input
               value={input}
               onChange={handleInputChange}

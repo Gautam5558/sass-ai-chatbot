@@ -3,7 +3,10 @@ import React from "react";
 
 const Features = () => {
   return (
-    <div className="mx-12 my-5 px-10 py-24 bg-gray-200 flex flex-col gap-8 items-center rounded-[5px]">
+    <div
+      id="features"
+      className="mx-12 my-5 px-10 py-24 bg-gray-200 flex flex-col gap-8 items-center rounded-[5px]"
+    >
       <h2 className="font-bold text-3xl">Key Features</h2>
       <div className="flex justify-around">
         {features.map((feature) => {
