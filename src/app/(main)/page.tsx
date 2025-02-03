@@ -17,6 +17,7 @@ const HomePage = () => {
         setIsInView(true);
       } else {
         setIsInView(false);
+        setIsChatModalOpen(false);
       }
     };
     document.addEventListener("scroll", handleScroll);
@@ -50,7 +51,11 @@ const HomePage = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      {isInView && isChatModalOpen && <ChatModal />}
+      <AnimatePresence>
+        {isInView && isChatModalOpen && (
+          <ChatModal toggleChatModal={toggleChatModal} />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
